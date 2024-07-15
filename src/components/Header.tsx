@@ -19,7 +19,8 @@ function Header() {
     if (!showSearchForm) {
       setShowSearchForm(true);
     } else {
-      searchValue ? navigate('/catalog', { state: searchValue }) : setShowSearchForm(false);
+      searchValue && navigate('/catalog', { state: searchValue });
+      setShowSearchForm(false);
     }
   }
 

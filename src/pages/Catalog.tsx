@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Item, { CatalogItemProps } from '../components/catalog/Item';
 import Menu from '../components/catalog/Menu';
 import Preloader from '../components/Preloader';
+import { getProducts } from '../api';
 
 function Catalog({ withSearch }: { withSearch?: boolean }) {
   const location = useLocation();
@@ -13,41 +14,50 @@ function Catalog({ withSearch }: { withSearch?: boolean }) {
   const [categoryId, setCategoryId] = useState(0);
   const [catalog, setCatalog] = useState<CatalogItemProps[]>([]);
   const [offsetValue, setOffsetValue] = useState(0);
-  const [searchValue, setSearchValue] = useState(location.state);
+  const [searchValue, setSearchValue] = useState(location.state || '');
 
   useEffect(() => {
-    setFullLoading(true);
     setCanUploadMore(true);
+    setOffsetValue(0);
+    loadProducts(true);
+  }, [categoryId]);
 
-    const url = process.env.REACT_APP_CATALOG_URL as string + (categoryId > 0 ? `?categoryId=${categoryId}` : '');
-    fetch(url)
-      .then((response) => response.json())
+  const loadProducts = (isFullLoading: boolean) => {
+    isFullLoading ? setFullLoading(true) : setUploading(true);
+
+    getProducts(
+      categoryId,
+      searchValue,
+      isFullLoading ? 0 : offsetValue + 6
+    )
+      .then((data) => {
+        if (data.length < 6) {
+          setCanUploadMore(false);
+        }
+        isFullLoading ? setCatalog(data) : setCatalog(prevState => [...prevState, ...data]);
+        isFullLoading ? setFullLoading(false) : setUploading(false);
+        !isFullLoading && setOffsetValue(offsetValue + 6);
+      })
+      .catch((error) => console.error(error));
+  }
+
+  const keyPressHandler = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      searchHandler(e);
+    }
+  }
+
+  const searchHandler = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFullLoading(true);
+
+    getProducts(categoryId, searchValue, offsetValue)
       .then((data) => {
         if (data.length < 6) {
           setCanUploadMore(false);
         }
         setCatalog(data);
         setFullLoading(false);
-      })
-      .catch((error) => console.error(error));
-  }, [categoryId]);
-
-  const uploadProducts = () => {
-    setUploading(true);
-
-    const category = categoryId > 0 ? `?categoryId=${categoryId}` : '';
-    const offset = `${categoryId > 0 ? '&' : '?'}offset=${offsetValue + 6}`;
-
-    fetch(process.env.REACT_APP_CATALOG_URL + category + offset)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (data.length < 6) {
-          setCanUploadMore(false);
-        }
-        setCatalog(prevState => [...prevState, ...data]);
-        setUploading(false);
-        setOffsetValue(offsetValue + 6);
       })
       .catch((error) => console.error(error));
   }
@@ -64,6 +74,7 @@ function Catalog({ withSearch }: { withSearch?: boolean }) {
                 placeholder="Поиск"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
+                onKeyPress={keyPressHandler}
               />
             </form>
           )}
@@ -74,9 +85,9 @@ function Catalog({ withSearch }: { withSearch?: boolean }) {
           <div className="text-center">
             {uploading
               ? <Preloader />
-              : (
-                canUploadMore && <button className="btn btn-outline-primary" onClick={uploadProducts}>Загрузить ещё</button>
-              )
+              : canUploadMore && (
+                  <button className="btn btn-outline-primary" onClick={() => loadProducts(false)}>Загрузить ещё</button>
+                )
             }
           </div>
         </>
