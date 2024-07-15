@@ -1,18 +1,10 @@
-import { configureStore, ThunkAction, Action, createListenerMiddleware } from '@reduxjs/toolkit';
-import cartReducer, { addToCart, removeFromCart } from '../features/cartSlice';
+import {configureStore, ThunkAction, Action, createListenerMiddleware, isAnyOf} from '@reduxjs/toolkit';
+import cartReducer, {addToCart, clearCart, removeFromCart} from '../features/cartSlice';
 
 const listenerMiddleware = createListenerMiddleware();
 
 listenerMiddleware.startListening({
-  actionCreator: addToCart,
-  effect: (action, listenerApi: any) => {
-    const { products } = listenerApi.getState().cart;
-    localStorage.setItem('products', JSON.stringify(products));
-  }
-});
-
-listenerMiddleware.startListening({
-  actionCreator: removeFromCart,
+  matcher: isAnyOf(addToCart, removeFromCart, clearCart),
   effect: (action, listenerApi: any) => {
     const { products } = listenerApi.getState().cart;
     localStorage.setItem('products', JSON.stringify(products));

@@ -33,10 +33,14 @@ export const cartSlice = createSlice({
       state.products = state.products?.filter((product) => product.id !== action.payload);
       state.count -= 1;
     },
+    clearCart: (state) => {
+      state.products = [];
+      state.count = 0;
+    },
   }
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
 export const selectCount = (state: RootState) => state.cart.count;
 export const selectProducts = (state: RootState) => state.cart.products;
 export default cartSlice.reducer;
