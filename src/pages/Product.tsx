@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useAppDispatch } from '../app/hooks';
-import { incCartCount, decCartCount } from '../features/cartSlice';
+import { addToCart } from '../features/cartSlice';
 import Preloader from '../components/Preloader';
 import { ProductProps } from '../types';
 import { Count, Info, Sizes } from '../components/product';
@@ -25,16 +25,14 @@ function Product() {
       .catch((error) => console.error(error));
   }, []);
 
-  const clickHandler = () => {
-    const productToAdd = {
+  const addToCartHandler = () => {
+    dispatch(addToCart({
       id: product.id,
       size: selectedSize,
       title: product.title,
       price: product.price,
       count,
-    }
-    localStorage.setItem(product.id.toString(), JSON.stringify(productToAdd));
-    dispatch(incCartCount())
+    }));
   }
 
   return (
@@ -61,7 +59,7 @@ function Product() {
                 <button
                   className="btn btn-danger btn-block btn-lg"
                   disabled={!selectedSize}
-                  onClick={clickHandler}
+                  onClick={addToCartHandler}
                 >
                   В корзину
                 </button>

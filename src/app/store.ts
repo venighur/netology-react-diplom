@@ -1,12 +1,21 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
-import cartReducer from '../features/cartSlice';
+import { configureStore, ThunkAction, Action, createListenerMiddleware } from '@reduxjs/toolkit';
+import cartReducer, { addToCart } from '../features/cartSlice';
+
+const listenerMiddleware = createListenerMiddleware();
+
+listenerMiddleware.startListening({
+  actionCreator: addToCart,
+  effect: (action, listenerApi) => {
+    const products = localStorage.getItem('products') ? JSON.parse(localStorage.getItem('products')!) : [];
+    localStorage.setItem('products', JSON.stringify([...products, action.payload]));
+  }
+})
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     cart: cartReducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(listenerMiddleware.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;
