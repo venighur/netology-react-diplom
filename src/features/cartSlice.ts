@@ -20,8 +20,8 @@ export const cartSlice = createSlice({
       state.products?.push(action.payload);
       state.count += 1;
     },
-    removeFromCart: (state, payload: PayloadAction<ProductInCartProps>) => {
-      state.products = state.products?.filter((product) => product.id !== payload.payload.id);
+    removeFromCart: (state, action: PayloadAction<number>) => {
+      state.products = state.products?.filter((product) => product.id !== action.payload);
       state.count -= 1;
     },
   }
