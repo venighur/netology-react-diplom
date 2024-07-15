@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import Item, { CatalogItemProps } from '../components/catalog/Item';
-import Menu from '../components/catalog/Menu';
+import { CatalogItemProps } from '../types';
+import { Item, Menu } from '../components/catalog';
 import Preloader from '../components/Preloader';
 import { getProducts } from '../api';
 

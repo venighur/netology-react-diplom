@@ -26,3 +26,11 @@ export type ProductInCartProps = {
   count: number;
   price: number;
 }
+
+export type CatalogItemProps = {
+  id: number,
+  category: number,
+  images: string[],
+  price: number,
+  title: string,
+};

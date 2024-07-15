@@ -5,7 +5,7 @@ type CatalogMenuProps = {
   setCategoryId: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function Menu({ categoryId, setCategoryId }: CatalogMenuProps) {
+export function Menu({ categoryId, setCategoryId }: CatalogMenuProps) {
   return (
     <ul className="catalog-categories nav justify-content-center">
       <li className="nav-item" onClick={() => setCategoryId(0)}>
@@ -26,5 +26,3 @@ function Menu({ categoryId, setCategoryId }: CatalogMenuProps) {
     </ul>
   );
 }
-
-export default Menu;

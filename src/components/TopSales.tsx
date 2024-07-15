@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Item, { CatalogItemProps } from './catalog/Item';
+import { Item } from './catalog';
+import { CatalogItemProps } from '../types';
 import Preloader from './Preloader';
 
 function TopSales() {

@@ -1,15 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { CatalogItemProps } from '../../types';
 
-export type CatalogItemProps = {
-  id: number,
-  category: number,
-  images: string[],
-  price: number,
-  title: string,
-}
-
-function Item({ id, images, price, title }: CatalogItemProps) {
+export function Item({ id, images, price, title }: CatalogItemProps) {
   return (
     <div className="col-4">
       <div className="card catalog-item-card">
@@ -25,5 +18,3 @@ function Item({ id, images, price, title }: CatalogItemProps) {
 
   );
 }
-
-export default Item;
