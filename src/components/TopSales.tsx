@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Item, { CatalogItemProps } from './catalog/Item';
 import Preloader from './Preloader';
 
@@ -19,14 +19,18 @@ function TopSales() {
   }, []);
 
   return (
-    <section className="top-sales">
-      <h2 className="text-center">Хиты продаж!</h2>
-      {loading ? <Preloader /> : (
-        <div className="row">
-          {topSales.map((item) => <Item key={item.id} {...item} />)}
-        </div>
+    <>
+      {!loading && topSales.length === 0 ? null : (
+        <section className="top-sales">
+          <h2 className="text-center">Хиты продаж!</h2>
+          {loading ? <Preloader /> : (
+            <div className="row">
+              {topSales.map((item) => <Item key={item.id} {...item} />)}
+            </div>
+          )}
+        </section>
       )}
-    </section>
+    </>
   );
 }
 
