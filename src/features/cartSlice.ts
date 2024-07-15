@@ -1,15 +1,15 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState, AppThunk } from '../app/store';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../app/store';
 import { ProductInCartProps } from '../types';
 
 export interface CartState {
   count: number;
-  products?: ProductInCartProps[]
+  products: ProductInCartProps[];
 }
 
 const initialState: CartState = {
-  count: 0,
-  products: [],
+  count: localStorage.getItem('products') ? JSON.parse(localStorage.getItem('products')!).length : 0,
+  products: localStorage.getItem('products') ? JSON.parse(localStorage.getItem('products')!) : [],
 };
 
 export const cartSlice = createSlice({
