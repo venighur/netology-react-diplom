@@ -1,22 +1,21 @@
 import { configureStore, ThunkAction, Action, createListenerMiddleware } from '@reduxjs/toolkit';
 import cartReducer, { addToCart, removeFromCart } from '../features/cartSlice';
-import {ProductInCartProps} from '../types';
 
 const listenerMiddleware = createListenerMiddleware();
 
 listenerMiddleware.startListening({
   actionCreator: addToCart,
-  effect: (action, listenerApi) => {
-    const products = localStorage.getItem('products') ? JSON.parse(localStorage.getItem('products')!) : [];
-    localStorage.setItem('products', JSON.stringify([...products, action.payload]));
+  effect: (action, listenerApi: any) => {
+    const { products } = listenerApi.getState().cart;
+    localStorage.setItem('products', JSON.stringify(products));
   }
 });
 
 listenerMiddleware.startListening({
   actionCreator: removeFromCart,
-  effect: (action, listenerApi) => {
-    const products = localStorage.getItem('products') ? JSON.parse(localStorage.getItem('products')!) : [];
-    localStorage.setItem('products', JSON.stringify(products.filter((product: ProductInCartProps) => product.id !== action.payload)));
+  effect: (action, listenerApi: any) => {
+    const { products } = listenerApi.getState().cart;
+    localStorage.setItem('products', JSON.stringify(products));
   }
 });
 
