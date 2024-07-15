@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAppDispatch } from '../app/hooks';
-import { removeFromCart } from '../features/cartSlice';
-import { ProductInCartProps } from '../types';
+import { useAppDispatch } from '../../app/hooks';
+import { removeFromCart } from '../../features/cartSlice';
+import { ProductInCartProps } from '../../types';
 
-export function CartItem({ product }: { product: ProductInCartProps }) {
+export function Item({ product }: { product: ProductInCartProps }) {
   const dispatch = useAppDispatch();
 
   return (
