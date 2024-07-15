@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
 import { addToCart } from '../features/cartSlice';
 import Preloader from '../components/Preloader';
@@ -8,6 +9,7 @@ import { Count, Info, Sizes } from '../components/product';
 
 function Product() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const [count, setCount] = useState(1);
@@ -33,6 +35,7 @@ function Product() {
       price: product.price,
       count,
     }));
+    navigate('/cart');
   }
 
   return (
