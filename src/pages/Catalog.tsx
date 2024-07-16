@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { CatalogItemProps } from '../types';
 import { Item, Menu } from '../components/catalog';
+import Alert from '../components/Alert';
 import Preloader from '../components/Preloader';
 import { getProducts } from '../api';
 
@@ -15,6 +16,7 @@ function Catalog({ withSearch }: { withSearch?: boolean }) {
   const [catalog, setCatalog] = useState<CatalogItemProps[]>([]);
   const [offsetValue, setOffsetValue] = useState(0);
   const [searchValue, setSearchValue] = useState(location.state || '');
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     setCanUploadMore(true);
@@ -24,6 +26,7 @@ function Catalog({ withSearch }: { withSearch?: boolean }) {
 
   const loadProducts = (isFullLoading: boolean) => {
     isFullLoading ? setFullLoading(true) : setUploading(true);
+    isFullLoading && setCatalog([]);
 
     getProducts(
       categoryId,
@@ -31,6 +34,7 @@ function Catalog({ withSearch }: { withSearch?: boolean }) {
       isFullLoading ? 0 : offsetValue + 6
     )
       .then((data) => {
+        setIsError(false);
         if (data.length < 6) {
           setCanUploadMore(false);
         }
@@ -38,7 +42,12 @@ function Catalog({ withSearch }: { withSearch?: boolean }) {
         isFullLoading ? setFullLoading(false) : setUploading(false);
         !isFullLoading && setOffsetValue(offsetValue + 6);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        setIsError(true);
+        isFullLoading ? setFullLoading(false) : setUploading(false);
+      });
+
   }
 
   const keyPressHandler = (e: React.KeyboardEvent) => {
@@ -53,18 +62,24 @@ function Catalog({ withSearch }: { withSearch?: boolean }) {
 
     getProducts(categoryId, searchValue, offsetValue)
       .then((data) => {
+        setIsError(false);
         if (data.length < 6) {
           setCanUploadMore(false);
         }
         setCatalog(data);
         setFullLoading(false);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        setIsError(true);
+        setFullLoading(false);
+      });
   }
 
   return (
     <section className="catalog">
       <h2 className="text-center">Каталог</h2>
+
       {fullLoading ? <Preloader /> : (
         <>
           {withSearch && (
@@ -82,10 +97,11 @@ function Catalog({ withSearch }: { withSearch?: boolean }) {
           <div className="row">
             {catalog.map((item) => <Item key={item.id} {...item} />)}
           </div>
+          {isError && <Alert text="Ошибка загрузки Каталога" status="danger" />}
           <div className="text-center">
             {uploading
               ? <Preloader />
-              : canUploadMore && (
+              : canUploadMore && !isError && (
                   <button className="btn btn-outline-primary" onClick={() => loadProducts(false)}>Загрузить ещё</button>
                 )
             }
