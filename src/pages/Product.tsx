@@ -6,6 +6,7 @@ import { useAppDispatch } from '../app/hooks';
 import { addToCart } from '../features/cartSlice';
 // components
 import { Count, Info, Sizes } from '../components/product';
+import Alert from '../components/Alert';
 import Preloader from '../components/Preloader';
 // types
 import { ProductProps } from '../types';
@@ -20,16 +21,26 @@ function Product() {
   const [selectedSize, setSelectedSize] = useState('');
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState({} as ProductProps);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
+    getProduct();
+  }, []);
+
+  const getProduct = () => {
     fetch(process.env.REACT_APP_CATALOG_URL + `/${id}`)
       .then((response) => response.json())
       .then((data) => {
+        setError(false);
         setProduct(data);
         setLoading(false);
       })
-      .catch((error) => console.error(error));
-  }, []);
+      .catch((error) => {
+        console.error(error)
+        setError(true);
+        setLoading(false);
+      });
+  };
 
   const addToCartHandler = () => {
     dispatch(addToCart({
@@ -45,7 +56,9 @@ function Product() {
   return (
     <>
       <section className="catalog-item">
-        {loading ? <Preloader /> : (
+        {error && <Alert text="Ошибка при загрузке данных о товаре" status="danger" repeat={getProduct}/>}
+        {loading && <Preloader />}
+        {!loading && !error && (
           <>
             <h2 className="text-center">{product.title}</h2>
             <div className="row">
