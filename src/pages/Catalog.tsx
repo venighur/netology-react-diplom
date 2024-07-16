@@ -59,6 +59,7 @@ function Catalog({ withSearch }: { withSearch?: boolean }) {
   const searchHandler = (e: React.FormEvent) => {
     e.preventDefault();
     setFullLoading(true);
+    setCatalog([]);
 
     getProducts(categoryId, searchValue, offsetValue)
       .then((data) => {
@@ -79,7 +80,6 @@ function Catalog({ withSearch }: { withSearch?: boolean }) {
   return (
     <section className="catalog">
       <h2 className="text-center">Каталог</h2>
-
       {fullLoading ? <Preloader /> : (
         <>
           {withSearch && (
@@ -97,6 +97,7 @@ function Catalog({ withSearch }: { withSearch?: boolean }) {
           <div className="row">
             {catalog.map((item) => <Item key={item.id} {...item} />)}
           </div>
+          {catalog.length === 0 && !isError && <div className="text-center">Ничего не найдено</div>}
           {isError && <Alert text="Ошибка загрузки Каталога" status="danger" />}
           <div className="text-center">
             {uploading
