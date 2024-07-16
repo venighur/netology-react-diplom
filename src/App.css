@@ -29,6 +29,10 @@ section {
 .invisible {
   opacity: 0;
 }
+.alert-btn {
+  background-color: rgb(0, 0, 0, 0);
+  border: none;
+}
 
 /* Header */
 .header-controls-pics {
