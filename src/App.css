@@ -33,6 +33,11 @@ section {
   background-color: rgb(0, 0, 0, 0);
   border: none;
 }
+.order-alerts {
+  max-width: 30rem;
+  margin: 0 auto;
+  padding-bottom: 8px;
+}
 
 /* Header */
 .header-controls-pics {

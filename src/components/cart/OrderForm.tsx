@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { clearCart, selectProducts } from '../../features/cartSlice';
 import Preloader from '../Preloader';
+import Alert from '../Alert';
 
 export function OrderForm() {
   const dispatch = useAppDispatch();
@@ -12,6 +13,7 @@ export function OrderForm() {
     address: '',
     agreement: false,
   });
+  const [status, setStatus] = useState('');
 
   const products = useAppSelector(selectProducts);
 
@@ -26,7 +28,9 @@ export function OrderForm() {
     e.preventDefault();
 
     setLoading(true);
-    fetch('http://localhost:7070/api/order', {
+    setStatus('');
+
+    fetch(process.env.REACT_APP_ORDER_URL as string, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -45,21 +49,27 @@ export function OrderForm() {
     })
       .then(() => {
         dispatch(clearCart());
-        alert('Заказ оформлен!');
+        setStatus('success');
+        setForm({
+          phone: '',
+          address: '',
+          agreement: false,
+        });
       })
-      .catch(() => alert('Что-то пошло не так!'));
+      .catch(() => {
+        setStatus('fail')
+      });
 
     setLoading(false);
-    setForm({
-      phone: '',
-      address: '',
-      agreement: false,
-    });
   }
 
   return (
     <section className="order">
       <h2 className="text-center">Оформить заказ</h2>
+      <div className="order-alerts">
+        {status === 'success' && <Alert text="Заказ оформлен" status="success" />}
+        {status === 'fail' && <Alert text="Ошибка при оформлении заказа" status="danger" />}
+      </div>
       {loading ? <Preloader /> : (
         <div className="card" style={{ maxWidth: '30rem', margin: '0 auto' }}>
           <form className="card-body" onSubmit={submitHandler}>
@@ -93,7 +103,7 @@ export function OrderForm() {
               />
               <label className="form-check-label" htmlFor="agreement">Согласен с правилами доставки</label>
             </div>
-            <button type="submit" className="btn btn-outline-secondary">Оформить</button>
+            <button type="submit" className="btn btn-outline-secondary" disabled={!(products.length > 0)}>Оформить</button>
           </form>
         </div>
       )}
