@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
+// redux
 import { useAppDispatch } from '../app/hooks';
 import { addToCart } from '../features/cartSlice';
-import Preloader from '../components/Preloader';
-import { ProductProps } from '../types';
+// components
 import { Count, Info, Sizes } from '../components/product';
+import Preloader from '../components/Preloader';
+// types
+import { ProductProps } from '../types';
 
 function Product() {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const dispatch = useAppDispatch();
 
   const [count, setCount] = useState(1);
@@ -40,37 +44,38 @@ function Product() {
 
   return (
     <>
-      {loading && <Preloader />}
-      {!loading && (
-        <section className="catalog-item">
-          <h2 className="text-center">{product.title}</h2>
-          <div className="row">
-            <div className="col-5">
-              <img src={product.images[0]} className="img-fluid" alt="" />
-            </div>
-            <div className="col-7">
-              <Info product={product}/>
-              <div className="text-center">
-                <Sizes
-                  sizes={product.sizes.filter((s) => s.available)}
-                  selectedSize={selectedSize}
-                  setSelectedSize={setSelectedSize}
-                />
-                {product.sizes.some((s) => s.available) && <Count count={count} setCount={setCount} />}
+      <section className="catalog-item">
+        {loading ? <Preloader /> : (
+          <>
+            <h2 className="text-center">{product.title}</h2>
+            <div className="row">
+              <div className="col-5">
+                <img src={product.images[0]} className="img-fluid" alt="" />
               </div>
-              {product.sizes.some((s) => s.available) && (
-                <button
-                  className="btn btn-danger btn-block btn-lg"
-                  disabled={!selectedSize}
-                  onClick={addToCartHandler}
-                >
-                  В корзину
-                </button>
-              )}
+              <div className="col-7">
+                <Info product={product}/>
+                <div className="text-center">
+                  <Sizes
+                    sizes={product.sizes.filter((s) => s.available)}
+                    selectedSize={selectedSize}
+                    setSelectedSize={setSelectedSize}
+                  />
+                  {product.sizes.some((s) => s.available) && <Count count={count} setCount={setCount} />}
+                </div>
+                {product.sizes.some((s) => s.available) && (
+                  <button
+                    className="btn btn-danger btn-block btn-lg"
+                    disabled={!selectedSize}
+                    onClick={addToCartHandler}
+                  >
+                    В корзину
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          </>
+        )}
+      </section>
     </>
   );
 }
