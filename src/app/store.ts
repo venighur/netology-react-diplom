@@ -1,5 +1,5 @@
-import {configureStore, ThunkAction, Action, createListenerMiddleware, isAnyOf} from '@reduxjs/toolkit';
-import cartReducer, {addToCart, clearCart, removeFromCart} from '../features/cartSlice';
+import { configureStore, ThunkAction, Action, createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
+import cartReducer, { addToCart, clearCart, removeFromCart } from '../features/cartSlice';
 
 const listenerMiddleware = createListenerMiddleware();
 

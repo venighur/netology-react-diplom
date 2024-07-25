@@ -8,11 +8,6 @@ type SizesProps = {
 };
 
 export function Sizes({ sizes, selectedSize, setSelectedSize }: SizesProps) {
-  const clickHandler = (e: React.MouseEvent<HTMLSpanElement>) => {
-    const span = e.target as HTMLSpanElement;
-    setSelectedSize(selectedSize === span.innerText ? '' : span.innerText);
-  }
-
   return (
     <>
       {sizes.length > 0 && (
@@ -20,7 +15,7 @@ export function Sizes({ sizes, selectedSize, setSelectedSize }: SizesProps) {
           <span
             key={s.size}
             className={`catalog-item-size ${selectedSize === (s.size) ? ' selected' : ''}`}
-            onClick={clickHandler}>
+            onClick={() => setSelectedSize(selectedSize === s.size ? '' : s.size)}>
             {s.size}
           </span>
         ))}</p>

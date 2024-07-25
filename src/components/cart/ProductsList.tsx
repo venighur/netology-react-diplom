@@ -19,10 +19,10 @@ export function ProductsList({ products }: { products: ProductInCartProps[] }) {
         </tr>
         </thead>
         <tbody>
-        {products?.map((p) => <Item key={p.id} product={p} />)}
+        {products.map((p) => <Item key={p.id} product={p} />)}
         <tr>
           <td colSpan={5} className="text-right">Общая стоимость</td>
-          <td>{products?.reduce((acc, p) => acc + p.price * p.count, 0).toLocaleString()} руб.</td>
+          <td>{products.reduce((acc, p) => acc + p.price * p.count, 0).toLocaleString()} руб.</td>
         </tr>
         </tbody>
       </table>

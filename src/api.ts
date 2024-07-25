@@ -1,4 +1,4 @@
-export const getProducts = (categoryId: number, searchValue: string, offsetValue: number) => {
+export const getProducts = (categoryId: number | null, searchValue: string, offsetValue: number) => {
 
   const category = !categoryId ? '' :`?categoryId=${categoryId}`;
   const search = !searchValue ? '' : `${!category ? '?' : '&'}q=${searchValue}`;

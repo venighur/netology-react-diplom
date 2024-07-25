@@ -17,20 +17,20 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<ProductInCartProps>) => {
-      if (state.products?.find((product) => product.id === action.payload.id && product.size === action.payload.size)) {
-        state.products = state.products?.map((product) => {
+      if (state.products.find((product) => product.id === action.payload.id && product.size === action.payload.size)) {
+        state.products = state.products.map((product) => {
           if (product.id === action.payload.id && product.size === action.payload.size) {
             product.count += 1;
           }
           return product;
         });
       } else {
-        state.products?.push(action.payload);
+        state.products.push(action.payload);
         state.count += 1;
       }
     },
     removeFromCart: (state, action: PayloadAction<number>) => {
-      state.products = state.products?.filter((product) => product.id !== action.payload);
+      state.products = state.products.filter((product) => product.id !== action.payload);
       state.count -= 1;
     },
     clearCart: (state) => {

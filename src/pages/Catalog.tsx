@@ -12,7 +12,7 @@ function Catalog({ withSearch }: { withSearch?: boolean }) {
   const [fullLoading, setFullLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [canUploadMore, setCanUploadMore] = useState(true);
-  const [categoryId, setCategoryId] = useState(0);
+  const [categoryId, setCategoryId] = useState<number | null>(null);
   const [catalog, setCatalog] = useState<CatalogItemProps[]>([]);
   const [offsetValue, setOffsetValue] = useState(0);
   const [searchValue, setSearchValue] = useState(location.state || '');
